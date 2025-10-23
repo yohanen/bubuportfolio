@@ -1,304 +1,470 @@
 // script.js
-// All behavior improved: hash navigation, lazy-iframes, youtube-click-to-load, accessible mobile nav, skill bars animation, testimonial slider, copy-to-clipboard with toast.
+// Improved interactive behaviors for the portfolio:
+// - Sidebar / mobile nav handling (restored + accessible)
+// - Smooth section navigation, deep-linking support
+// - Theme toggle with persistence (light / dark)
+// - Lazy iframe loaders (YouTube thumbnail click, Drive preview, Google Maps)
+// - Skill-bar animation when Skills section becomes visible (once)
+// - Testimonial slider (prev/next + read-more toggles)
+// - Copy email to clipboard with non-blocking toast
+// - Scroll-reveal via IntersectionObserver
+// Author: improved version to restore original features + accessibility/performance
 
-// Helper: simple toast
-function showToast(message, timeout = 3000) {
-  let toast = document.getElementById('toast');
-  if (!toast) return alert(message);
-  const item = document.createElement('div');
-  item.className = 'toast-item';
-  item.textContent = message;
-  toast.appendChild(item);
-  setTimeout(() => {
-    item.classList.add('visible');
-  }, 50);
-  setTimeout(() => {
-    item.classList.remove('visible');
-    setTimeout(() => item.remove(), 400);
-  }, timeout);
-}
+(function () {
+  'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
+  // ---------- Utilities ----------
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+  const $$ = (sel, ctx = document) => Array.from((ctx || document).querySelectorAll(sel));
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-  // ---------- NAVIGATION & DEEP LINKS ----------
-  const navLinks = document.querySelectorAll('.nav-link');
-  function setActiveNavByHash(hash) {
-    navLinks.forEach(l => {
-      if (l.getAttribute('href') === '#' + hash || l.dataset.section === hash) {
-        l.classList.add('bg-yellow-400', 'text-black');
-        l.setAttribute('aria-current','true');
-      } else {
-        l.classList.remove('bg-yellow-400', 'text-black');
-        l.removeAttribute('aria-current');
-      }
-    });
-  }
-
-  // On click, update hash and smooth-scroll to section
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      // allow normal anchor scrolling by setting location.hash
-      const sectionId = link.dataset.section || link.getAttribute('href').replace('#','');
-      if (!sectionId) return;
-      e.preventDefault();
-      history.pushState(null, '', '#' + sectionId);
-      const target = document.getElementById(sectionId);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      setActiveNavByHash(sectionId);
-      // close mobile nav if open
-      const mobileNav = document.getElementById('mobile-nav');
-      const mobileToggle = document.getElementById('mobile-nav-toggle');
-      if (mobileNav && mobileToggle && !mobileNav.classList.contains('hidden')) {
-        mobileNav.classList.add('hidden');
-        mobileToggle.setAttribute('aria-expanded', 'false');
-      }
-      // if Skills shown, animate skill bars
-      if (sectionId === 'skills') animateSkillBars();
-    });
-  });
-
-  // On load: if there is a hash, scroll to it
-  if (window.location.hash) {
-    const hash = window.location.hash.slice(1);
-    const el = document.getElementById(hash);
-    if (el) {
-      setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
-      setActiveNavByHash(hash);
+  // ---------- Toast ----------
+  function showToast(message, opts = {}) {
+    const toastRoot = document.getElementById('toast');
+    if (!toastRoot) {
+      alert(message);
+      return;
     }
-  } else {
-    // default highlight About
-    setActiveNavByHash('about');
+    const id = 'toast-' + Date.now();
+    const el = document.createElement('div');
+    el.id = id;
+    el.className = 'toast-item';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    el.style = `
+      background: rgba(31,41,55,0.95);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      margin: 8px;
+      max-width: 320px;
+    `;
+    el.textContent = message;
+    toastRoot.appendChild(el);
+    // auto remove
+    setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(-6px)';
+      setTimeout(() => el.remove(), 450);
+    }, opts.duration || 2200);
   }
 
-  // Update active nav on popstate (back/forward)
-  window.addEventListener('popstate', () => {
-    const hash = window.location.hash ? window.location.hash.slice(1) : 'about';
-    setActiveNavByHash(hash);
-  });
+  // ---------- Theme toggle ----------
+  const themeToggleBtn = document.getElementById('themeToggle');
+  function setTheme(isLight) {
+    try {
+      if (isLight) {
+        document.documentElement.classList.add('light-mode');
+        localStorage.setItem('site-theme', 'light');
+        if (themeToggleBtn) {
+          themeToggleBtn.textContent = '🌙 Dark Mode';
+          themeToggleBtn.setAttribute('aria-pressed', 'true');
+        }
+      } else {
+        document.documentElement.classList.remove('light-mode');
+        localStorage.setItem('site-theme', 'dark');
+        if (themeToggleBtn) {
+          themeToggleBtn.textContent = '☀️ Light Mode';
+          themeToggleBtn.setAttribute('aria-pressed', 'false');
+        }
+      }
+    } catch (e) {
+      // fallback
+      if (themeToggleBtn) themeToggleBtn.textContent = isLight ? '🌙 Dark Mode' : '☀️ Light Mode';
+    }
+  }
+  function toggleTheme() {
+    const isLight = document.documentElement.classList.toggle('light-mode');
+    setTheme(isLight);
+    showToast(isLight ? 'Light mode enabled' : 'Dark mode enabled');
+  }
 
-  // ---------- MOBILE NAV ACCESSIBILITY ----------
+  // ---------- Navigation (desktop + mobile) ----------
+  const navLinks = $$('.nav-link');
+  const sections = $$('.section-content');
   const mobileNavToggle = document.getElementById('mobile-nav-toggle');
   const mobileNav = document.getElementById('mobile-nav');
-  if (mobileNavToggle && mobileNav) {
-    mobileNavToggle.addEventListener('click', () => {
-      const isHidden = mobileNav.classList.toggle('hidden');
-      const expanded = !isHidden;
-      mobileNavToggle.setAttribute('aria-expanded', String(expanded));
-      // move focus into the mobile nav first link when opened for accessibility
-      if (expanded) {
-        const first = mobileNav.querySelector('.nav-link');
-        if (first) first.focus();
+
+  function setActiveNav(sectionId) {
+    navLinks.forEach((a) => {
+      const id = a.getAttribute('data-section') || (a.getAttribute('href') || '').replace('#', '');
+      if (id === sectionId) {
+        a.classList.add('bg-yellow-400', 'text-black');
+        a.setAttribute('aria-current', 'true');
+      } else {
+        a.classList.remove('bg-yellow-400', 'text-black');
+        a.removeAttribute('aria-current');
       }
     });
   }
 
-  // ---------- THEME TOGGLE (LIGHT/DARK) ----------
-  const themeToggle = document.getElementById('themeToggle');
-  function setTheme(light) {
-    if (!themeToggle) return;
-    document.documentElement.classList.toggle('light-mode', light);
-    themeToggle.textContent = light ? '🌙 Dark Mode' : '☀️ Light Mode';
-    themeToggle.setAttribute('aria-pressed', String(light));
-    try { localStorage.setItem('site-theme', light ? 'light' : 'dark'); } catch(e){}
-  }
-  if (themeToggle) {
-    // initial label based on presence of class
-    const isLight = document.documentElement.classList.contains('light-mode');
-    themeToggle.textContent = isLight ? '🌙 Dark Mode' : '☀️ Light Mode';
-    themeToggle.addEventListener('click', () => setTheme(!document.documentElement.classList.contains('light-mode')));
-  }
-
-  // ---------- LAZY IFRAME LOADING (Google Drive & Google Maps) ----------
-  const lazyIframes = document.querySelectorAll('.lazy-iframe');
-  lazyIframes.forEach(container => {
-    const btn = container.querySelector('.iframe-load-btn');
-    const src = container.dataset.src;
-    if (!src) return;
-    function loadFrame() {
-      if (container.dataset.loaded) return;
-      const iframe = document.createElement('iframe');
-      iframe.src = src;
-      iframe.width = '100%';
-      iframe.height = container.style.minHeight || '240';
-      iframe.loading = 'lazy';
-      iframe.referrerPolicy = 'no-referrer-when-downgrade';
-      iframe.setAttribute('allowfullscreen', '');
-      iframe.title = 'Embedded content';
-      container.innerHTML = ''; // clear placeholder
-      container.appendChild(iframe);
-      container.dataset.loaded = 'true';
-    }
-    // load on button click
-    if (btn) btn.addEventListener('click', loadFrame);
-    // also load when scrolled into view (intersection)
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          loadFrame();
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.25 });
-    observer.observe(container);
-  });
-
-  // ---------- LAZY YOUTUBE: click-to-load pattern ----------
-  document.querySelectorAll('.youtube-embed').forEach(embed => {
-    const id = embed.dataset.id;
-    if (!id) return;
-    embed.addEventListener('click', function handler() {
-      // create real iframe
-      const iframe = document.createElement('iframe');
-      iframe.width = '100%';
-      iframe.height = '100%';
-      iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
-      iframe.title = 'YouTube video player';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      iframe.loading = 'lazy';
-      iframe.setAttribute('allowfullscreen', '');
-      embed.innerHTML = ''; // remove poster/button
-      embed.appendChild(iframe);
-      embed.removeEventListener('click', handler);
-    }, { once: true });
-  });
-
-  // ---------- SKILL BARS ----------
-  function animateSkillBars() {
-    const fills = document.querySelectorAll('.skill-bar-fill');
-    fills.forEach((fill, i) => {
-      const p = parseInt(fill.dataset.percent || fill.getAttribute('data-percent') || '70', 10);
+  function showSection(sectionId, updateHash = true) {
+    if (!sectionId) return;
+    // Hide all
+    sections.forEach(s => s.classList.add('hidden'));
+    const sec = document.getElementById(sectionId);
+    if (sec) {
+      sec.classList.remove('hidden');
+      // Move focus for accessibility
+      sec.setAttribute('tabindex', '-1');
+      sec.focus({preventScroll: true});
+      // Smooth scroll into view (works even when fixed sidebar present)
       setTimeout(() => {
-        fill.style.width = p + '%';
-      }, 200 + i * 80);
+        sec.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }, 70);
+      setActiveNav(sectionId);
+      // animate skill bars when opening skills
+      if (sectionId === 'skills') {
+        setTimeout(animateSkillBars, 300);
+      }
+      if (updateHash) {
+        // update deep link without adding history entry repeatedly
+        history.replaceState(null, '', `#${sectionId}`);
+      }
+      // close mobile nav if open
+      if (mobileNav && !mobileNav.classList.contains('hidden')) {
+        toggleMobileNav(false);
+      }
+    }
+  }
+
+  function toggleMobileNav(forceOpen = null) {
+    if (!mobileNav) return;
+    const isHidden = mobileNav.classList.contains('hidden');
+    const open = (forceOpen === null) ? isHidden : forceOpen;
+    if (open) {
+      mobileNav.classList.remove('hidden');
+      mobileNavToggle.setAttribute('aria-expanded', 'true');
+      mobileNavToggle.classList.add('open');
+    } else {
+      mobileNav.classList.add('hidden');
+      mobileNavToggle.setAttribute('aria-expanded', 'false');
+      mobileNavToggle.classList.remove('open');
+    }
+  }
+
+  // ---------- Lazy iframe loaders ----------
+  // For containers with class 'lazy-iframe' and attribute data-src
+  function loadLazyIframes() {
+    const iframes = $$('.lazy-iframe');
+    iframes.forEach(container => {
+      const btn = container.querySelector('.iframe-load-btn');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const src = container.getAttribute('data-src');
+          if (!src) return;
+          const iframe = document.createElement('iframe');
+          iframe.src = src;
+          iframe.width = '100%';
+          iframe.height = container.style.height || '320';
+          iframe.loading = 'lazy';
+          iframe.referrerPolicy = 'no-referrer-when-downgrade';
+          iframe.className = 'w-full rounded shadow';
+          container.innerHTML = '';
+          container.appendChild(iframe);
+          showToast('Preview loaded');
+        });
+      } else {
+        // Optionally, auto-load if container is in viewport (not implemented by default)
+      }
     });
   }
-  // Animate visible skill bars if skills section is in view
-  const skillsSection = document.getElementById('skills');
-  if (skillsSection) {
-    const obs = new IntersectionObserver((entries, o) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          animateSkillBars();
-          o.unobserve(e.target);
+
+  // YouTube lazy embed from custom .youtube-embed elements
+  function initYouTubePlaceholders() {
+    const ytEmbeds = $$('.youtube-embed');
+    ytEmbeds.forEach(wrapper => {
+      // If we've already replaced it, skip
+      if (wrapper.dataset.loaded === '1') return;
+      const id = wrapper.getAttribute('data-id');
+      if (!id) return;
+      const btn = wrapper.querySelector('.youtube-play') || wrapper;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // build iframe
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+        iframe.width = '100%';
+        iframe.height = wrapper.getAttribute('data-height') || '360';
+        iframe.loading = 'lazy';
+        iframe.className = 'w-full h-full';
+        wrapper.innerHTML = '';
+        wrapper.appendChild(iframe);
+        wrapper.dataset.loaded = '1';
+      });
+      // keyboard accessibility - allow Enter key on the wrapper button
+      btn.setAttribute('tabindex', '0');
+      btn.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          btn.click();
         }
       });
-    }, { threshold: 0.35 });
-    obs.observe(skillsSection);
+    });
   }
 
-  // ---------- PROJECT CARD RIPPLE (non-blocking) ----------
-  document.querySelectorAll('.bg-gray-700, .bg-gray-600').forEach(card => {
-    card.addEventListener('mouseenter', function(e) {
-      // ripple effect purely decorative; not inserted for keyboard users
-      const ripple = document.createElement('span');
-      ripple.className = 'ripple';
-      ripple.style.width = ripple.style.height = '120px';
-      ripple.style.left = (e.offsetX - 60) + 'px';
-      ripple.style.top = (e.offsetY - 60) + 'px';
-      ripple.style.background = 'rgba(250,204,21,0.15)';
-      ripple.style.zIndex = 10;
-      ripple.style.transition = 'opacity 0.6s';
-      ripple.style.position = 'absolute';
-      card.style.position = 'relative';
-      card.appendChild(ripple);
-      setTimeout(() => ripple.style.opacity = 0, 300);
-      setTimeout(() => ripple.remove(), 600);
+  // ---------- Skills animation ----------
+  let skillAnimated = false;
+  function animateSkillBars() {
+    if (skillAnimated) return;
+    const fills = $$('.skill-bar-fill');
+    fills.forEach((fill, i) => {
+      const p = Number(fill.getAttribute('data-percent') || 0);
+      const final = clamp(p, 0, 100);
+      // Stagger
+      setTimeout(() => {
+        fill.style.width = final + '%';
+      }, 150 + i * 80);
     });
-  });
+    skillAnimated = true;
+  }
 
-  // ---------- TESTIMONIAL SLIDER ----------
-  (function() {
-    const items = Array.from(document.querySelectorAll('#testimonial-content .testimonial-item'));
-    if (!items.length) return;
+  // ---------- Testimonial slider ----------
+  function initTestimonialSlider() {
+    const content = document.getElementById('testimonial-content');
+    if (!content) return;
+    const items = $$('#testimonial-content .testimonial-item');
     const prevBtn = document.getElementById('testimonial-prev');
     const nextBtn = document.getElementById('testimonial-next');
     let current = 0;
+
     function show(index) {
-      items.forEach((item, i) => {
-        if (i === index) item.classList.remove('hidden');
-        else item.classList.add('hidden');
-        // hide "more" content when switching
-        const more = item.querySelector('.testimonial-more');
-        const btn = item.querySelector('.testimonial-readmore');
-        if (more) more.classList.add('hidden');
-        if (btn) btn.textContent = 'Read More';
+      index = ((index % items.length) + items.length) % items.length;
+      items.forEach((it, i) => {
+        if (i === index) {
+          it.classList.remove('hidden');
+        } else {
+          it.classList.add('hidden');
+          // ensure "more" text collapsed
+          const more = it.querySelector('.testimonial-more');
+          const btn = it.querySelector('.testimonial-readmore');
+          if (more) more.classList.add('hidden');
+          if (btn) btn.textContent = 'Read More';
+        }
       });
       current = index;
     }
-    if (prevBtn && nextBtn) {
-      prevBtn.addEventListener('click', () => show((current - 1 + items.length) % items.length));
-      nextBtn.addEventListener('click', () => show((current + 1) % items.length));
-    }
-    // delegate read-more toggles
-    const content = document.getElementById('testimonial-content');
-    if (content) {
-      content.addEventListener('click', (e) => {
-        if (e.target && e.target.classList.contains('testimonial-readmore')) {
-          const item = items[current];
-          const more = item.querySelector('.testimonial-more');
-          const btn = item.querySelector('.testimonial-readmore');
-          if (more && btn) {
-            if (more.classList.contains('hidden')) {
-              more.classList.remove('hidden');
-              btn.textContent = 'Read Less';
-            } else {
-              more.classList.add('hidden');
-              btn.textContent = 'Read More';
-            }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => show(current - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => show(current + 1));
+
+    // Keyboard support
+    if (prevBtn) prevBtn.addEventListener('keydown', e => { if (e.key === 'Enter') prevBtn.click(); });
+    if (nextBtn) nextBtn.addEventListener('keydown', e => { if (e.key === 'Enter') nextBtn.click(); });
+
+    // Read more toggles
+    content.addEventListener('click', (e) => {
+      if (e.target && e.target.classList && e.target.classList.contains('testimonial-readmore')) {
+        const item = items[current];
+        const more = item.querySelector('.testimonial-more');
+        const btn = item.querySelector('.testimonial-readmore');
+        if (more && btn) {
+          if (more.classList.contains('hidden')) {
+            more.classList.remove('hidden');
+            btn.textContent = 'Read Less';
+          } else {
+            more.classList.add('hidden');
+            btn.textContent = 'Read More';
           }
         }
-      });
-    }
-    show(0);
-  })();
+      }
+    });
 
-  // ---------- COPY EMAIL (non-blocking, with fallback) ----------
-  const copyBtn = document.getElementById('copyEmailBtn');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', async () => {
-      const el = document.getElementById('emailText');
-      if (!el) return;
-      const email = el.textContent.trim();
+    // init
+    if (items.length) show(0);
+  }
+
+  // ---------- Copy Email ----------
+  function initCopyEmail() {
+    const copyBtn = document.getElementById('copyEmailBtn') || document.getElementById('copyEmail');
+    const emailEl = document.getElementById('emailText');
+    if (!copyBtn || !emailEl) return;
+    copyBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = emailEl.textContent.trim();
       try {
         await navigator.clipboard.writeText(email);
-        showToast('✅ Email copied to clipboard!');
+        showToast('✅ Email copied to clipboard');
       } catch (err) {
-        // fallback to selecting
+        // fallback: create temporary input
+        const tmp = document.createElement('input');
+        tmp.value = email;
+        document.body.appendChild(tmp);
+        tmp.select();
         try {
-          const range = document.createRange();
-          range.selectNodeContents(el);
-          const sel = window.getSelection();
-          sel.removeAllRanges();
-          sel.addRange(range);
-          document.execCommand('copy'); // fallback
-          sel.removeAllRanges();
-          showToast('Copied (fallback).');
-        } catch (e) {
-          showToast('Unable to copy. Please select and copy manually.');
+          document.execCommand('copy');
+          showToast('✅ Email copied to clipboard');
+        } catch (err2) {
+          showToast('Could not copy. Please copy manually.');
         }
+        tmp.remove();
       }
     });
   }
 
-  // ---------- SIMPLE CONTACT FORM CLIENT-SIDE VALIDATION (graceful) ----------
-  const form = document.getElementById('contact-form');
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      // let browser handle required fields; could add custom validation here
-      showToast('Sending message...');
-      // No need to preventDefault — the form will be submitted to Formspree
+  // ---------- Scroll reveal using IntersectionObserver ----------
+  function initScrollReveal() {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('opacity-100', 'translate-y-0');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    const revealTargets = $$('.section-content');
+    revealTargets.forEach(t => {
+      // ensure initial state
+      t.classList.add('opacity-0', 'translate-y-4', 'transition', 'duration-700');
+      observer.observe(t);
     });
   }
 
-  // ---------- SMALL A11Y: focus outlines for keyboard users ----------
-  function handleFirstTab(e) {
-    if (e.key === 'Tab') {
-      document.documentElement.classList.add('user-is-tabbing');
-      window.removeEventListener('keydown', handleFirstTab);
+  // ---------- Initial section visibility & deep link support ----------
+  function restoreInitialSection() {
+    // Hide everything first (so CSS state is consistent)
+    sections.forEach(s => s.classList.add('hidden'));
+
+    // If there's a hash, open the referenced section (and avoid scrolling too early)
+    const hash = (location.hash || '').replace('#', '');
+    if (hash) {
+      const target = document.getElementById(hash);
+      if (target) {
+        setTimeout(() => showSection(hash, false), 80);
+        return;
+      }
+    }
+    // default: show about
+    showSection('about', false);
+  }
+
+  // ---------- Attach nav handlers ----------
+  function initNavHandlers() {
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        // If href anchor exists, prevent default because we handle smooth scroll and visibility
+        e.preventDefault();
+        const sectionId = link.getAttribute('data-section') || (link.getAttribute('href') || '').replace('#', '');
+        if (!sectionId) return;
+        showSection(sectionId, true);
+      });
+      // Keyboard activation
+      link.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          link.click();
+        }
+      });
+    });
+
+    // mobile toggle
+    if (mobileNavToggle) {
+      mobileNavToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleMobileNav();
+      });
+      mobileNavToggle.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          mobileNavToggle.click();
+        }
+      });
     }
   }
-  window.addEventListener('keydown', handleFirstTab);
 
-});
+  // ---------- Mobile nav auto-close when clicking a link inside mobile menu ----------
+  function initMobileAutoClose() {
+    if (!mobileNav) return;
+    const mobileLinks = mobileNav.querySelectorAll('.nav-link');
+    mobileLinks.forEach(a => {
+      a.addEventListener('click', () => {
+        toggleMobileNav(false);
+      });
+    });
+  }
+
+  // ---------- Accessibility: focus management for skip link ----------
+  function initSkipLink() {
+    const skip = document.querySelector('.skip-link');
+    const main = document.getElementById('main-content');
+    if (skip && main) {
+      skip.addEventListener('click', (e) => {
+        e.preventDefault();
+        main.focus();
+      });
+    }
+  }
+
+  // ---------- Initialize everything on DOMContentLoaded ----------
+  document.addEventListener('DOMContentLoaded', () => {
+    // Theme button
+    if (themeToggleBtn) {
+      // restore label state to reflect current theme
+      const isLight = document.documentElement.classList.contains('light-mode');
+      setTheme(isLight);
+      themeToggleBtn.addEventListener('click', toggleTheme);
+      // keyboard accessible
+      themeToggleBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter') themeToggleBtn.click(); });
+    }
+
+    initNavHandlers();
+    initMobileAutoClose();
+    initYouTubePlaceholders();
+    loadLazyIframes();
+    initTestimonialSlider();
+    initCopyEmail();
+    initScrollReveal();
+    initSkipLink();
+
+    // ensure initial section visibility / deep link is honored
+    restoreInitialSection();
+
+    // If skills section already visible on load (large screens), animate skill bars after small delay
+    // (intersection observer will animate as they enter)
+    // But we also run a check
+    const skillsSection = document.getElementById('skills');
+    if (skillsSection) {
+      const rect = skillsSection.getBoundingClientRect();
+      if (rect.top >= 0 && rect.top < window.innerHeight) {
+        setTimeout(animateSkillBars, 350);
+      }
+    }
+
+    // Ensure lazy iframe containers inside the viewport are not left unclickable
+    // Add an automatic "load on intersection" for lazy-iframe (optional)
+    const lazyIframes = $$('.lazy-iframe');
+    if (lazyIframes.length) {
+      const liObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            // show a subtle 'Load' hint - do not auto-load to avoid network use
+            const btn = en.target.querySelector('.iframe-load-btn');
+            if (btn) btn.classList.add('visible');
+            // Unobserve after first hint
+            obs.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      lazyIframes.forEach(n => liObserver.observe(n));
+    }
+
+    // optional: handle window.hashchange to respond to external navigation
+    window.addEventListener('hashchange', () => {
+      const h = (location.hash || '').replace('#', '');
+      if (h) showSection(h, false);
+    });
+  });
+
+  // Expose some functions for debugging if needed
+  window.portfolioHelpers = {
+    showSection,
+    toggleMobileNav,
+    animateSkillBars,
+    showToast
+  };
+
+})();
