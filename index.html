@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic meta & SEO -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yohanen | Portfolio</title>
+  <meta name="description" content="Yohanen Dinagde Ejeta — Tech Enthusiast | Machine Learning & Data Science | Open to Internships, Jobs, Remote Roles & Scholarship Opportunities. Portfolio, projects, and contact." />
+  <link rel="canonical" href="https://yohanen.github.io/my-portfolio/" />
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Yohanen | Portfolio" />
+  <meta property="og:description" content="Full-stack projects, ML experiments, and professional profile by Yohanen Dinagde Ejeta. Open for internships and roles." />
+  <meta property="og:url" content="https://yohanen.github.io/my-portfolio/" />
+  <!-- If you have an OG image, place assets/og-image.png -->
+  <meta property="og:image" content="assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#facc15" />
+
+  <!-- Preconnect and preload fonts for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" as="style" onload="this.rel='stylesheet'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  </noscript>
+
+  <!-- Tailwind CDN (deferred) - in production compile and purge unused classes -->
+  <script src="https://cdn.tailwindcss.com" defer></script>
+
+  <!-- Font Awesome (only used for icons in this design). Consider replacing with inline svg for production. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- JSON-LD structured data for Person / Resume -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Yohanen Dinagde Ejeta",
+    "url": "https://yohanen.github.io/my-portfolio/",
+    "sameAs": [
+      "https://github.com/yohanen",
+      "https://www.linkedin.com/in/yohanen2021"
+    ],
+    "jobTitle": "Machine Learning & Data Science Enthusiast",
+    "email": "mailto:yohanendinagde7@gmail.com"
+  }
+  </script>
+
+  <!-- Small critical inline script: theme from localStorage (very small) -->
+  <script>
+    (function() {
+      try {
+        var stored = localStorage.getItem('site-theme');
+        if (stored === 'light') document.documentElement.classList.add('light-mode');
+      } catch(e) { /* ignore */ }
+    })();
+  </script>
+
+  <!-- Favicon (optional) -->
+  <link rel="icon" href="assets/favicon.ico" />
+</head>
+<body class="bg-gray-900 text-white font-sans transition-colors duration-500">
+
+  <!-- Skip link for keyboard users -->
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <!-- Theme toggle (fixed) -->
+  <button id="themeToggle" aria-pressed="false"
+    class="fixed top-6 right-8 px-4 py-1 border border-yellow-300 rounded-full font-bold text-yellow-300 hover:bg-yellow-300 hover:text-black transition z-50 bg-gray-900/80 shadow-lg"
+    style="backdrop-filter: blur(8px);"
+    title="Toggle light/dark theme">
+    ☀️ Light Mode
+  </button>
+
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar Navigation (desktop) -->
+    <aside class="bg-gray-800 glass-nav w-64 min-h-screen md:flex flex-col py-10 px-6 fixed left-0 top-0 z-40 rounded-r-2xl shadow-2xl overflow-y-auto hidden md:block"
+      style="backdrop-filter: blur(18px); background: rgba(31,41,55,0.75); box-shadow: 0 8px 32px 0 #0005; max-height: 90vh;">
+      <nav class="flex flex-col gap-5" aria-label="Primary">
+        <!-- Nav links include data-section attribute used by script -->
+        <a href="#about" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="about"><i class="fas fa-user" aria-hidden="true"></i> <span>About</span></a>
+        <a href="#skills" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="skills"><i class="fas fa-tools" aria-hidden="true"></i> <span>Skills</span></a>
+        <a href="#blog" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="blog"><i class="fas fa-pen-nib" aria-hidden="true"></i> <span>Blog</span></a>
+        <a href="#projects" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="projects"><i class="fas fa-project-diagram" aria-hidden="true"></i> <span>Projects</span></a>
+        <a href="#resume" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="resume"><i class="fas fa-file-alt" aria-hidden="true"></i> <span>Resume</span></a>
+        <a href="#testimonials" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="testimonials"><i class="fas fa-comment-dots" aria-hidden="true"></i> <span>Testimonials</span></a>
+        <a href="#education" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="education"><i class="fas fa-graduation-cap" aria-hidden="true"></i> <span>Education</span></a>
+        <a href="#languages" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="languages"><i class="fas fa-language" aria-hidden="true"></i> <span>Languages</span></a>
+        <a href="#hobbies" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="hobbies"><i class="fas fa-heart" aria-hidden="true"></i> <span>Hobbies</span></a>
+        <a href="#achievements" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="achievements"><i class="fas fa-trophy" aria-hidden="true"></i> <span>Achievements</span></a>
+        <a href="#location" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="location"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <span>Location</span></a>
+        <a href="#contact" class="nav-link flex items-center gap-3 text-yellow-300 font-semibold py-3 px-5 rounded-lg transition" data-section="contact"><i class="fas fa-envelope" aria-hidden="true"></i> <span>Contact</span></a>
+      </nav>
+    </aside>
+
+    <!-- Mobile hamburger -->
+    <div class="md:hidden fixed top-6 left-4 z-50">
+      <button id="mobile-nav-toggle" class="text-yellow-300 text-3xl p-2 rounded bg-gray-800 shadow-lg focus:outline-none" aria-label="Open navigation menu" aria-expanded="false">
+        <i class="fas fa-bars" aria-hidden="true"></i>
+      </button>
+      <div id="mobile-nav" class="hidden absolute top-12 left-0 bg-gray-800 rounded-r-2xl shadow-lg w-56 flex flex-col space-y-4 py-6 px-4" style="max-height: 80vh; overflow-y: auto;">
+        <a href="#about" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="about">About</a>
+        <a href="#skills" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="skills">Skills</a>
+        <a href="#blog" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="blog">Blog</a>
+        <a href="#projects" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="projects">Projects</a>
+        <a href="#resume" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="resume">Resume</a>
+        <a href="#testimonials" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="testimonials">Testimonials</a>
+        <a href="#education" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="education">Education</a>
+        <a href="#languages" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="languages">Languages</a>
+        <a href="#hobbies" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="hobbies">Hobbies</a>
+        <a href="#achievements" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="achievements">Achievements</a>
+        <a href="#location" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="location">Location</a>
+        <a href="#contact" class="nav-link text-yellow-300 font-semibold py-2 px-4 rounded transition" data-section="contact">Contact</a>
+      </div>
+    </div>
+
+    <!-- Main content container -->
+    <div class="flex-1 md:ml-64">
+      <div class="max-w-5xl mx-auto px-4" id="main-content">
+        <header class="hero-header relative flex flex-col items-center justify-center text-center py-28 md:py-36 overflow-hidden">
+          <!-- Animated SVG blob background -->
+          <svg class="absolute left-1/2 top-0 -translate-x-1/2 w-[120vw] h-[60vh] z-0 animate-blob-move" viewBox="0 0 900 600" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: blur(32px); opacity: 0.5;" aria-hidden="true">
+            <ellipse cx="450" cy="300" rx="400" ry="180" fill="url(#blobGradient)" />
+            <defs>
+              <linearGradient id="blobGradient" x1="0" y1="0" x2="900" y2="600" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#facc15" />
+                <stop offset="0.5" stop-color="#a78bfa" />
+                <stop offset="1" stop-color="#38bdf8" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <div class="relative z-10 w-full flex flex-col items-center">
+            <h1 class="hero-title text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-yellow-400 via-fuchsia-500 to-blue-500 bg-clip-text text-transparent mb-2 drop-shadow-2xl" style="text-shadow: 0 4px 32px #000a, 0 2px 8px #facc15;">
+              <span class="shimmer-text">Yohanen Dinagde Ejeta</span>
+            </h1>
+            <p class="hero-subtitle text-lg md:text-xl font-medium text-white/90 mb-2 inline-block px-6 py-3 rounded-2xl shadow-2xl bg-gradient-to-r from-blue-900/70 via-indigo-800/70 to-fuchsia-800/70 border-2 border-yellow-300/60 backdrop-blur-lg max-w-2xl mx-auto mt-6">
+              Tech Enthusiast | Machine Learning & Data Science | <span class="text-yellow-300 font-bold">Open to Internships, Jobs, Remote Roles & Scholarship Opportunities</span>
+            </p>
+          </div>
+
+          <!-- Scroll-down indicator -->
+          <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center animate-bounce" aria-hidden="true">
+            <span class="text-yellow-300 text-3xl"><i class="fas fa-chevron-down"></i></span>
+            <span class="text-xs text-gray-300 mt-1">Scroll</span>
+          </div>
+
+          <!-- Animated SVG wave background (visual only) -->
+          <svg class="absolute left-0 top-0 w-full h-full z-0 pointer-events-none" viewBox="0 0 1440 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill="#facc15" fill-opacity="0.08" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,133.3C840,107,960,85,1080,101.3C1200,117,1320,171,1380,197.3L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+          </svg>
+        </header>
+
+        <main>
+          <!-- ABOUT SECTION (kept original content) -->
+          <section id="about" class="section-content about-modern mx-auto max-w-4xl mt-8 animate-fadein">
+            <div class="flex flex-col md:flex-row gap-10 items-center">
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-4">
+                  <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-user"></i></span>
+                  <h2 class="text-3xl font-bold tracking-wide text-yellow-300 mb-0">About Me</h2>
+                </div>
+                <p class="mb-3 text-lg text-white/90 text-justify">Hi! I'm Yohanen, a recent Bachelor of Computer Application (BCA) graduate from Uttaranchal University. I'm passionate about building real-world tech solutions, exploring new technologies, and contributing to communities that value innovation and learning.</p>
+                <p class="text-base text-gray-300 text-justify">I'm particularly interested in projects that combine education, technology, and social good. I enjoy collaborating, solving real-life problems through code, and learning as I go. Whether it’s backend logic or front-end user experiences, I strive to create meaningful impact through technology.</p>
+              </div>
+
+              <div class="flex-1 flex flex-col gap-6 items-center">
+                <div class="w-full">
+                  <p class="text-sm text-gray-400 mb-2 font-semibold">🎥 Watch My Introduction Video:</p>
+                  <!-- Lazy YouTube embed (poster + click-to-load) -->
+                  <div class="rounded-xl overflow-hidden shadow-lg border border-yellow-300/30 youtube-embed" data-id="Bjpxya-XGPM" aria-label="Introduction video">
+                    <button class="youtube-play" aria-label="Play introduction video">
+                      <img loading="lazy" src="https://img.youtube.com/vi/Bjpxya-XGPM/hqdefault.jpg" alt="Intro video thumbnail" class="w-full h-56 md:h-60 object-cover" />
+                      <span class="play-icon" aria-hidden="true">▶</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="w-full">
+                  <h3 class="text-lg font-semibold text-yellow-300 mb-2 flex items-center gap-2"><i class="fas fa-graduation-cap"></i> Graduation Highlight</h3>
+                  <div class="grid grid-cols-2 gap-4 mb-4">
+                    <img src="assets/graduation_photo1.jpg" alt="Graduation Moment 1" loading="lazy" class="rounded-lg shadow-md w-full object-cover h-32 md:h-36 hover:scale-105 transition-transform duration-300" />
+                    <img src="assets/graduation_photo2.jpg" alt="Graduation Moment 2" loading="lazy" class="rounded-lg shadow-md w-full object-cover h-32 md:h-36 hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="rounded-xl overflow-hidden shadow-lg border border-yellow-300/30">
+                    <!-- Keep original drive preview but lazy-load iframe via data-src -->
+                    <div class="lazy-iframe" data-src="https://drive.google.com/file/d/1YxK9ENfFz8NJLjLTICLQBiYakvWWR1K-/preview" style="min-height:180px;">
+                      <button class="iframe-load-btn">Load Certificate Preview</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- SKILLS SECTION -->
+          <section id="skills" class="section-content glass-card mx-auto max-w-4xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-tools"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Skills</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="flex flex-col gap-4">
+                <div class="flex items-center gap-3"><i class="fab fa-python text-2xl text-yellow-300" aria-hidden="true"></i><span>Python</span></div>
+                <div class="flex items-center gap-3"><i class="fab fa-php text-2xl text-indigo-300" aria-hidden="true"></i><span>PHP</span></div>
+                <div class="flex items-center gap-3"><i class="fas fa-database text-2xl text-blue-300" aria-hidden="true"></i><span>MySQL</span></div>
+                <div class="flex items-center gap-3"><i class="fas fa-code text-2xl text-pink-300" aria-hidden="true"></i><span>CodeIgniter</span></div>
+                <div class="flex items-center gap-3"><i class="fab fa-html5 text-2xl text-orange-300" aria-hidden="true"></i><span>HTML</span></div>
+                <div class="flex items-center gap-3"><i class="fab fa-css3-alt text-2xl text-blue-400" aria-hidden="true"></i><span>CSS</span></div>
+                <div class="flex items-center gap-3"><i class="fab fa-js text-2xl text-yellow-200" aria-hidden="true"></i><span>JavaScript</span></div>
+              </div>
+
+              <div class="flex flex-col gap-4">
+                <div class="flex items-center gap-3"><i class="fab fa-git-alt text-2xl text-red-300" aria-hidden="true"></i><span>Git</span></div>
+                <div class="flex items-center gap-3"><i class="fab fa-github text-2xl text-gray-300" aria-hidden="true"></i><span>GitHub</span></div>
+                <div class="flex items-center gap-3"><i class="fas fa-robot text-2xl text-green-300" aria-hidden="true"></i><span>Machine Learning</span></div>
+                <div class="flex items-center gap-3"><i class="fas fa-comments text-2xl text-yellow-200" aria-hidden="true"></i><span>Communication</span></div>
+                <div class="flex items-center gap-3"><i class="fas fa-brain text-2xl text-purple-300" aria-hidden="true"></i><span>Critical Thinking</span></div>
+                <div class="flex items-center gap-3"><i class="fas fa-users text-2xl text-blue-200" aria-hidden="true"></i><span>Teamwork</span></div>
+                <div class="flex items-center gap-3"><i class="fas fa-lightbulb text-2xl text-yellow-300" aria-hidden="true"></i><span>Problem Solving</span></div>
+                <div class="flex items-center gap-3"><i class="fas fa-globe text-2xl text-teal-300" aria-hidden="true"></i><span>Web Development</span></div>
+              </div>
+            </div>
+
+            <!-- Animated skill bars (kept original skill list & percentages) -->
+            <div id="skills-bars" class="mt-8" aria-hidden="false">
+              <div class="mb-4">
+                <div class="flex justify-between mb-1"><span>Python</span><span class="text-yellow-300 font-bold">85%</span></div>
+                <div class="skill-bar"><div class="skill-bar-fill" style="width:0" data-percent="85" aria-hidden="true"></div></div>
+              </div>
+              <div class="mb-4">
+                <div class="flex justify-between mb-1"><span>PHP</span><span class="text-yellow-300 font-bold">75%</span></div>
+                <div class="skill-bar"><div class="skill-bar-fill" style="width:0" data-percent="75" aria-hidden="true"></div></div>
+              </div>
+              <!-- Additional skills created in script if needed (keeps original values) -->
+            </div>
+          </section>
+
+          <!-- BLOG SECTION -->
+          <section id="blog" class="section-content glass-card mx-auto max-w-4xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-pen-nib"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Blog</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all border border-yellow-300/20">
+                <h3 class="text-lg font-semibold text-yellow-300 mb-2">5 Lessons I Learned Building My First Full-Stack Project</h3>
+                <p class="text-sm text-gray-300 mb-3">A deep dive into lessons learned while developing the Smart School Management System using CodeIgniter and MySQL.</p>
+                <a href="#projects" class="text-yellow-400 hover:underline text-sm font-semibold">Read More →</a>
+              </div>
+
+              <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all border border-yellow-300/20">
+                <h3 class="text-lg font-semibold text-yellow-300 mb-2">Why I Love Machine Learning</h3>
+                <p class="text-sm text-gray-300 mb-3">Reflections on how AI and machine learning can transform education and contribute to social good.</p>
+                <a href="#about" class="text-yellow-400 hover:underline text-sm font-semibold">Read More →</a>
+              </div>
+            </div>
+          </section>
+
+          <!-- PROJECTS (kept original content) -->
+          <section id="projects" class="section-content glass-card mx-auto max-w-4xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-project-diagram"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Projects</h2>
+            </div>
+
+            <div class="bg-gray-700 p-6 rounded-xl shadow-lg border border-yellow-300/20 mb-6">
+              <h3 class="text-xl font-semibold text-yellow-300 mb-2">Smart School Management System</h3>
+              <p class="text-sm text-gray-300 mb-3">A full-stack web application built using <strong>CodeIgniter (PHP)</strong>, <strong>MySQL</strong>, <strong>HTML</strong>, and <strong>CSS</strong>. It provides dashboards for Admin, Teacher, Student, and Parent roles — including features like attendance, library, grades, and messaging.</p>
+              <div class="flex flex-wrap gap-2 mb-3 text-sm text-white">
+                <span class="bg-gray-600 px-2 py-1 rounded">PHP</span>
+                <span class="bg-gray-600 px-2 py-1 rounded">CodeIgniter</span>
+                <span class="bg-gray-600 px-2 py-1 rounded">MySQL</span>
+                <span class="bg-gray-600 px-2 py-1 rounded">HTML</span>
+                <span class="bg-gray-600 px-2 py-1 rounded">CSS</span>
+              </div>
+
+              <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div class="relative group overflow-hidden rounded-xl">
+                  <img src="assets/loginpage.png" alt="Login Page" loading="lazy" class="rounded shadow w-full object-cover h-40 group-hover:scale-105 transition-transform duration-300" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-yellow-400/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+                    <a href="#" class="btn bg-yellow-400 text-black font-bold px-4 py-2 rounded-full shadow-lg mr-2">Demo</a>
+                    <a href="https://github.com/yohanen/smart-school-management-system" target="_blank" rel="noopener noreferrer" class="btn bg-gray-900 text-yellow-300 font-bold px-4 py-2 rounded-full shadow-lg">GitHub</a>
+                  </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl">
+                  <img src="assets/admindashboard.png" alt="Admin Dashboard" loading="lazy" class="rounded shadow w-full object-cover h-40 group-hover:scale-105 transition-transform duration-300" />
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl">
+                  <img src="assets/teacherdashboard.png" alt="Teacher Dashboard" loading="lazy" class="rounded shadow w-full object-cover h-40 group-hover:scale-105 transition-transform duration-300" />
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl">
+                  <img src="assets/parentdashboard.png" alt="Parent Dashboard" loading="lazy" class="rounded shadow w-full object-cover h-40 group-hover:scale-105 transition-transform duration-300" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- RESUME (kept original content) -->
+          <section id="resume" class="section-content glass-card mx-auto max-w-2xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-file-alt"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Resume</h2>
+            </div>
+            <p class="mb-2">You can download my resume here:</p>
+            <a href="assets/curriculum vitae.pdf" target="_blank" rel="noopener noreferrer" class="btn bg-yellow-400 text-black font-bold px-6 py-2 rounded-full shadow-lg hover:bg-yellow-300 transition flex items-center gap-2" download><i class="fas fa-download" aria-hidden="true"></i> Download Resume (PDF)</a>
+            <span class="text-xs text-gray-500 block mt-2">(If the file is missing, please contact me for a copy.)</span>
+          </section>
+
+          <!-- TESTIMONIALS (kept content) -->
+          <section id="testimonials" class="section-content glass-card mx-auto max-w-2xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-comment-dots"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Testimonials</h2>
+            </div>
+
+            <div id="testimonial-slider" class="max-w-xl mx-auto flex flex-col items-center">
+              <div id="testimonial-content" class="w-full text-center">
+                <div class="testimonial-item" data-index="0">
+                  <p class="italic text-gray-300 mb-4">“Mr. Yohanen Dinagde Ejeta is a highly dedicated and disciplined individual who consistently demonstrated strong academic commitment and intellectual curiosity throughout his Bachelor of Computer Applications (BCA) program. <span class="testimonial-more hidden">His ability to think outside the box, problem-solving mindset, and continuous pursuit of excellence made him stand out among his peers.”</span></p>
+                  <button class="testimonial-readmore text-yellow-400 underline text-sm mb-2">Read More</button>
+                  <p class="text-sm font-semibold text-yellow-300">— Prof. (Dr.) Sonal Sharma<br><span class="text-gray-400">Director, Uttaranchal School of Computing Sciences<br>Uttaranchal University, Dehradun</span></p>
+                </div>
+
+                <div class="testimonial-item hidden" data-index="1">
+                  <p class="italic text-gray-300 mb-4">“Yohanen has shown exceptional performance in academics, research projects, and student-led initiatives. <span class="testimonial-more hidden">He was an active member of several key groups including the Robotics Club, Cyber Security Forum, Coding and Innovation Cell, and the Open-Source Community. His leadership, communication skills, and technical foundation make him a strong candidate for scholarships, higher studies, and tech jobs alike.”</span></p>
+                  <button class="testimonial-readmore text-yellow-400 underline text-sm mb-2">Read More</button>
+                  <p class="text-sm font-semibold text-yellow-300">— Dr. Sameer Dev Sharma<br><span class="text-gray-400">HoD, Uttaranchal School of Computing Sciences<br>Uttaranchal University, Dehradun</span></p>
+                </div>
+
+                <div class="testimonial-item hidden" data-index="2">
+                  <p class="italic text-gray-300 mb-4">“Mr. Yohanen showed excellent academic discipline, critical thinking skills, and a solid grasp ofnthe basic computer science concepts. <span class="testimonial-more hidden">He was very punctual, paid attention in class and took part in group activities. Also, his organizational and leadership skills made him a very reliable member of the class.”</span></p>
+                  <button class="testimonial-readmore text-yellow-400 underline text-sm mb-2">Read More</button>
+                  <p class="text-sm font-semibold text-yellow-300">— Mrs. Divya Singh<br><span class="text-gray-400">Class Coordinator (3rd Year)<br>Uttaranchal University, Dehradun</span></p>
+                </div>
+              </div>
+
+              <div class="flex justify-center items-center gap-8 mt-6">
+                <button id="testimonial-prev" class="text-yellow-400 text-2xl px-4 py-2 rounded-full bg-gray-900 shadow hover:bg-yellow-400 hover:text-black transition" aria-label="Previous testimonial" aria-controls="testimonial-content">&#8592;</button>
+                <button id="testimonial-next" class="text-yellow-400 text-2xl px-4 py-2 rounded-full bg-gray-900 shadow hover:bg-yellow-400 hover:text-black transition" aria-label="Next testimonial" aria-controls="testimonial-content">&#8594;</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- EDUCATION (kept content) -->
+          <section id="education" class="section-content glass-card mx-auto max-w-3xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-graduation-cap"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Education</h2>
+            </div>
+
+            <div class="border-l-4 border-yellow-400 pl-10 relative space-y-12">
+              <div class="relative">
+                <div class="absolute w-4 h-4 bg-yellow-400 rounded-full -left-6 top-1.5"></div>
+                <h3 class="text-white text-xl font-bold">Bachelor of Computer Application (BCA)</h3>
+                <p class="text-gray-300">Uttaranchal University – Dehradun, India</p>
+                <p class="text-yellow-300 text-sm">01 Aug 2022 – 27 May 2025 | CGPA: 7.92</p>
+                <p class="text-gray-400 text-sm">Gained strong skills in programming, databases, and web development. Completed internships and a full-stack project using CodeIgniter.</p>
+              </div>
+
+              <div class="relative">
+                <div class="absolute w-4 h-4 bg-yellow-400 rounded-full -left-6 top-1.5"></div>
+                <h3 class="text-white text-xl font-bold">Software Engineering Program</h3>
+                <p class="text-gray-300">ALX Ethiopia – Addis Ababa</p>
+                <p class="text-yellow-300 text-sm">05 Jun 2021 – 13 May 2022</p>
+                <p class="text-gray-400 text-sm">Completed hands-on training in software engineering and collaborative coding projects.</p>
+              </div>
+
+              <div class="relative">
+                <div class="absolute w-4 h-4 bg-yellow-400 rounded-full -left-6 top-1.5"></div>
+                <h3 class="text-white text-xl font-bold">Preparatory School (Grade 11–12)</h3>
+                <p class="text-gray-300">Guder Secondary School – Guder, Ethiopia</p>
+                <p class="text-yellow-300 text-sm">06 Aug 2018 – 13 May 2020 | Average: 89.18%</p>
+                <p class="text-gray-400 text-sm">Excelled in the Natural Science stream with strong academic performance and leadership roles.</p>
+              </div>
+
+              <div class="relative">
+                <div class="absolute w-4 h-4 bg-yellow-400 rounded-full -left-6 top-1.5"></div>
+                <h3 class="text-white text-xl font-bold">Secondary School (Grade 9–10)</h3>
+                <p class="text-gray-300">Guder Secondary School – Guder, Ethiopia</p>
+                <p class="text-yellow-300 text-sm">03 Aug 2015 – 26 May 2017 | Average: 87.74%</p>
+                <p class="text-gray-400 text-sm">Maintained consistent academic performance and participated in school activities.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- LANGUAGES -->
+          <section id="languages" class="section-content glass-card mx-auto max-w-2xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-language"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Languages</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+              <div>
+                <h3 class="text-xl font-semibold mb-4">Mother Tongue</h3>
+                <p class="text-white">Afan Oromo</p>
+              </div>
+
+              <div>
+                <h3 class="text-xl font-semibold mb-4">Other Languages</h3>
+                <div class="space-y-4">
+                  <div>
+                    <h4 class="font-medium text-lg text-white">Amharic</h4>
+                    <p class="text-sm text-gray-400">Listening: C2 | Reading: C2 | Writing: C1 | Speaking: C2</p>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-lg text-white">English</h4>
+                    <p class="text-sm text-gray-400">Listening: C2 | Reading: C1 | Writing: C1 | Speaking: C1</p>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-lg text-white">Hindi</h4>
+                    <p class="text-sm text-gray-400">Listening: A1 | Reading: A1 | Writing: A1 | Speaking: A1</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="mt-6 text-sm text-center text-gray-400">
+              <em>Level Reference: A1–A2: Basic | B1–B2: Independent | C1–C2: Proficient</em>
+            </p>
+          </section>
+
+          <!-- HOBBIES -->
+          <section id="hobbies" class="section-content glass-card mx-auto max-w-2xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-heart"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Hobbies & Interests</h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center text-gray-700">
+              <div>
+                <img src="https://img.icons8.com/ios-filled/50/4a4a4a/bicycle.png" class="mx-auto mb-3" alt="Cycling" loading="lazy" />
+                <p class="font-medium">Cycling & Outdoor Activities</p>
+              </div>
+              <div>
+                <img src="https://img.icons8.com/ios-filled/50/4a4a4a/helping-hand.png" class="mx-auto mb-3" alt="Volunteering" loading="lazy" />
+                <p class="font-medium">Volunteering & Community Work</p>
+              </div>
+              <div>
+                <img src="https://img.icons8.com/ios-filled/50/4a4a4a/language.png" class="mx-auto mb-3" alt="Languages" loading="lazy" />
+                <p class="font-medium">Learning New Languages</p>
+              </div>
+              <div>
+                <img src="https://img.icons8.com/ios-filled/50/4a4a4a/movie.png" class="mx-auto mb-3" alt="Movies" loading="lazy" />
+                <p class="font-medium">Watching Movies</p>
+              </div>
+              <div>
+                <img src="https://img.icons8.com/ios-filled/50/4a4a4a/code.png" class="mx-auto mb-3" alt="Web Dev" loading="lazy" />
+                <p class="font-medium">Web Development & UI Design</p>
+              </div>
+              <div>
+                <img src="https://img.icons8.com/ios-filled/50/4a4a4a/news.png" class="mx-auto mb-3" alt="Tech Blogging" loading="lazy" />
+                <p class="font-medium">Tech Blogging & Research</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ACHIEVEMENTS -->
+          <section id="achievements" class="section-content glass-card mx-auto max-w-2xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-trophy"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Achievements</h2>
+            </div>
+
+            <details class="group mb-6 transition-all duration-300">
+              <summary class="cursor-pointer text-lg font-semibold text-white flex items-center justify-between">
+                <span>🎖️ Awards & Honors</span>
+                <svg class="w-5 h-5 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </summary>
+              <ul class="list-disc list-inside text-yellow-300 mt-3 ml-2">
+                <li>
+                  Scholarship Winner (Study in India Program) - 2022  
+                  <br><a href="certificates/honors/Scholarship offer letter.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+                <li>
+                  Internship Certificate (Uttaranchal University) - 5 months  
+                  <br><a href="certificates/honors/internship certificate 1.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+              </ul>
+            </details>
+
+            <details class="group mb-6 transition-all duration-300">
+              <summary class="cursor-pointer text-lg font-semibold text-white flex items-center justify-between">
+                <span>📜 Certifications</span>
+                <svg class="w-5 h-5 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </summary>
+              <ul class="list-disc list-inside text-yellow-300 mt-3 ml-2">
+                <li>
+                  Avanced Microsoft Word Certificate – MindLuster  
+                  <br><a href="certificates/achievements/Advanced Microsoft Word Certificate.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+                <li>
+                  Rockstar Virtual Assistant Training - Transformation Academy
+                  <br><a href="certificates/achievements/Transformation Academy Certificate.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+                <li>
+                  Membership in Teaching Club - Mathematics Department
+                  <br><a href="certificates/achievements/mathematics departement certicate.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+                <li>
+                  Membership in Football Club
+                  <br><a href="certificates/achievements/soccer certificate.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+                <li>
+                  Student President
+                  <br><a href="certificates/achievements/student president certificate.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+              </ul>
+            </details>
+
+            <details class="group transition-all duration-300">
+              <summary class="cursor-pointer text-lg font-semibold text-white flex items-center justify-between">
+                <span>🤝 Volunteering & Club Activities</span>
+                <svg class="w-5 h-5 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </summary>
+              <ul class="list-disc list-inside text-yellow-300 mt-3 ml-2">
+                <li>
+                  Participator - Green Legacy Initiatives 
+                  <br><a href="certificates/voluntary/green legacy certificate.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+                <li>
+                  Voluntaring in Traffic Group in giving awareness and reducing accident  
+                  <br><a href="certificates/voluntary/traffic group.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+                <li>
+                  Participator - Hiv Aids Club
+                  <br><a href="certificates/voluntary/hiv aids club.pdf" target="_blank" rel="noopener noreferrer" class="underline text-sm">[View Certificate]</a>
+                </li>
+              </ul>
+            </details>
+          </section>
+
+          <!-- LOCATION -->
+          <section id="location" class="section-content glass-card mx-auto max-w-2xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-map-marker-alt"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Location</h2>
+            </div>
+
+            <p class="mb-4">I studied at Uttaranchal University and am currently based in India.</p>
+            <!-- Lazy-load map via data-src; map only loads when scrolled into view or clicked -->
+            <div class="lazy-iframe" data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3458.6881643665355!2d77.98079241544655!3d30.32556481134586!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390929cb5e1d0629%3A0xbed7e901f43ad7d0!2sUttaranchal%20University!5e0!3m2!1sen!2sin!4v1625032001234!5m2!1sen!2sin" aria-label="Map of Uttaranchal University" style="min-height:240px;">
+              <button class="iframe-load-btn">Load Map</button>
+            </div>
+          </section>
+
+          <!-- CONTACT -->
+          <section id="contact" class="section-content glass-card mx-auto max-w-2xl mt-8 animate-fadein">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 via-fuchsia-500 to-blue-500 text-white text-2xl shadow-lg"><i class="fas fa-envelope"></i></span>
+              <h2 class="text-2xl font-bold tracking-wide text-yellow-300 mb-0">Contact</h2>
+            </div>
+
+            <form action="https://formspree.io/f/xovlqwdd" method="POST" class="space-y-4" id="contact-form" novalidate>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="name">Your Name</label>
+                <input id="name" type="text" name="name" required class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="email">Your Email</label>
+                <input id="email" type="email" name="_replyto" required class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1" for="message">Message</label>
+                <textarea id="message" name="message" rows="4" required class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"></textarea>
+              </div>
+
+              <button type="submit" class="bg-yellow-400 text-black font-semibold px-6 py-2 rounded hover:bg-yellow-300 transition">
+                Send Message
+              </button>
+
+              <div class="mt-8 text-sm text-gray-300 space-y-1" aria-label="contact details">
+                <p><i class="fab fa-github text-yellow-400 mr-2"></i>GitHub:
+                <a href="https://github.com/yohanen" target="_blank" rel="noopener noreferrer" class="text-yellow-300 hover:underline">github.com/yohanen</a>
+                </p>
+
+                <p><i class="fab fa-linkedin text-yellow-400 mr-2"></i>LinkedIn:
+                <a href="https://www.linkedin.com/in/yohanen2021" target="_blank" rel="noopener noreferrer" class="text-yellow-300 hover:underline">linkedin.com/in/yohanen2021</a>
+                </p>
+
+                <p>
+                  <i class="fas fa-envelope text-yellow-400 mr-2"></i>Email:
+                  <a href="mailto:yohanendinagde7@gmail.com" id="emailText" class="text-yellow-300 hover:underline">yohanendinagde7@gmail.com</a>
+                  <button id="copyEmailBtn" class="ml-2 px-2 py-1 bg-yellow-400 text-black rounded text-xs hover:bg-yellow-300" type="button">
+                    Copy
+                  </button>
+                </p>
+
+                <p><i class="fas fa-phone text-yellow-400 mr-2"></i>Phone: +91-7409283325</p>
+              </div>
+            </form>
+          </section>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="text-center py-6 bg-transparent text-sm text-gray-400 mt-10 flex flex-col items-center gap-2" role="contentinfo">
+          <div class="flex gap-4 mb-2">
+            <a href="https://github.com/yohanen" target="_blank" rel="noopener noreferrer" class="text-2xl text-yellow-300 hover:text-yellow-400"><i class="fab fa-github" aria-hidden="true"></i><span class="sr-only">GitHub</span></a>
+            <a href="https://www.linkedin.com/in/yohanen2021" target="_blank" rel="noopener noreferrer" class="text-2xl text-blue-400 hover:text-blue-500"><i class="fab fa-linkedin" aria-hidden="true"></i><span class="sr-only">LinkedIn</span></a>
+            <a href="mailto:yohanendinagde7@gmail.com" class="text-2xl text-pink-400 hover:text-pink-500"><i class="fas fa-envelope" aria-hidden="true"></i><span class="sr-only">Email</span></a>
+          </div>
+          <span>&copy; 2025 Yohanen Dinagde Ejeta. All rights reserved.</span>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container for non-blocking messages -->
+  <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Scripts (deferred) -->
+  <script src="script.js" defer></script>
+</body>
+</html>
